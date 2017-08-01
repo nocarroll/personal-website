@@ -1,0 +1,29 @@
+@import "../../node_modules/bulma/sass/utilities/initial-variables";
+
+$primary: #FF6962;
+
+@import "../../node_modules/bulma/bulma.sass";
+
+
+$n-margin: 12px;
+.header {
+  margin: $n-margin $n-margin 0 $n-margin;
+}
+
+.subtitle {
+  &.is-faded {
+    opacity: 0.7;
+  }
+}
+
+img {
+  &.is-rounded {
+    border-radius: 50%;
+  }
+  &.has-border {
+    border: 5px solid $white;
+  }
+  &.has-shadow {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  }
+}
