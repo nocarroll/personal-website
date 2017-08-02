@@ -5234,14 +5234,33 @@ label.panel-block {
 .header {
   margin: 12px 12px 0 12px; }
 
-.subtitle.is-faded {
-  opacity: 0.7; }
+hr.is-primary {
+  height: 2px;
+  background: #FF6962; }
 
-img.is-rounded {
+.image img.is-centered {
+  margin: auto; }
+
+.image img.is-rounded {
   border-radius: 50%; }
 
-img.has-border {
+.image img.has-border {
   border: 5px solid white; }
 
-img.has-shadow {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); }
+.image img.has-shadow {
+  box-shadow: 0 3px 6px rgba(255, 105, 98, 0.16), 0 3px 6px rgba(255, 105, 98, 0.23); }
+
+.media-content .tag {
+  margin-bottom: 0.4em; }
+
+.media-content .media-block {
+  margin-bottom: 1em; }
+  .media-content .media-block ul {
+    list-style: initial; }
+
+.media-content a {
+  color: #3273dc; }
+  .media-content a.is-muted {
+    color: #7a7a7a; }
+  .media-content a:hover {
+    color: #4a4a4a; }
