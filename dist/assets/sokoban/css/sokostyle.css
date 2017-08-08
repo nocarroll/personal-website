@@ -1,0 +1,155 @@
+body
+		{
+			font-family: monospace; 
+			font-size: 24px;
+			color: White;
+			background: #3F665E;
+		}
+		
+		#containerDiv
+		{
+		width: 366px;
+		margin: auto;
+		background: Black;
+		}
+		
+		#infoDiv
+		{
+		margin: auto;
+		padding: 0.5em 1em 0.5em 1em;
+		width: 244px;
+		display: inline-block;
+		float: left;
+		background: #2F4C47;
+		color: #95F2E0;
+		}
+		
+		
+		#infoDiv h2
+		{
+		color: Coral;
+		padding: 0;
+		margin: 0;
+		}
+		
+		#infoDiv span
+		{
+		color: White;
+		font-size: 18px;
+		font-weight: bold;
+		background: #715273;
+		}
+		
+		button
+		{
+			font-family: monospace;
+			font-size: 24px;
+			background: White;
+			color: Black;
+			border: 0px;
+			width: 116px;
+			height: 32px;
+		}
+		
+		#buttonTable button:hover
+		{
+			font-family: monospace;
+			font-size: 24px;
+			background: Coral;
+			color: White;
+		}
+		
+		
+		#levelTable button:hover
+		{
+			font-family: monospace;
+			font-size: 24px;
+			background: White;
+			color: Coral;
+		}
+		
+		#levelTable button:disabled
+		{
+			font-family: monospace;
+			font-size: 24px;
+			background: Black;
+			color: Black;
+		}
+		
+		#undoTable button:hover
+		{
+			font-family: monospace;
+			font-size: 24px;
+			background: White;
+			color: Coral;
+		}
+		
+		#cell_1
+		{
+			color: Coral;
+			text-align: center;
+			
+		}
+		#movesText
+		{
+			background: Coral;
+			color: Black;
+			width: 366px;
+			text-align: center;
+		}
+		
+		#levelDiv
+		{
+			width: 366px;
+			background: Black;
+		}
+		
+		#levelTable td
+		{
+			width: 10%;
+			background: Black;
+		}
+		
+		#levelTable button
+		{
+			width: 100%;
+		}
+		
+		#boardDiv
+		{
+			width: 366px;
+			height: 426px;
+			background: Black;
+		}
+		
+		#boardTable
+		{
+			margin: auto;
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+			background: Black;
+			border-spacing: 0;
+			border-collapse: collapse;
+		}
+		
+		#boardTable td
+		{
+			width: 32px;
+			height: 32px;
+			padding: 0px;
+			margin: 0px;
+			
+		}
+		
+		#buttonDiv
+		{
+			width: 366px;
+			background: Black;	
+		}
+		
+		#buttonTable
+		{
+			width: 366px;
+			margin: auto;
+		}

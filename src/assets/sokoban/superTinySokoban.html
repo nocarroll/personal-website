@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+<html>
+	<head>
+		<title>Super Tiny Sokoban</title>
+		
+		<meta charset=utf-8>
+		
+		<link rel="icon" type="image/png" href="images/player.png" />
+		<link rel="stylesheet" href="css/sokostyle.css"/>
+		<script src="js/sokobanLevels.js"></script>
+		<script type="text/javascript">
+		/*-----------------------------------------------------------------------------
+			Super Tiny Sokoban: a javascript sokoban implementation by neil o carroll for MSc in IDM 2014/15 TCD
+			
+			features: 	count moves
+						'smart' undo (only undoes actual moves)
+						restart level
+						level select
+						keyboard input
+						on-screen button input
+						expandable
+						
+		limitations: 	limited level size (approx 11 x 10) due to compact styling (easily fixed, personal preference)
+						can't start player on target square
+						needs regular level width and height
+						
+						
+		program layout: 1. handling level data from external js script
+						2. creating the divs in the document
+						3. creating the display elements - board, buttons, text
+						4. the functions for gameplay
+						5. global variables for the game
+								
+		
+		-------------------------------------------------------------------------------
+		*/
+		
+								///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\		
+		
+		
+		/*-----------------------------------------------------------------------------
+				
+								1. handling level data from external js script
+		
+		-------------------------------------------------------------------------------
+		*/
+		
+		// cloning the levels so original arrays don't get altered and game can reset
+		function cloneLevels()
+			{
+			levels = [];
+			for (i = 0; i < mySokobanLevels.length; i++)
+				{
+				var myClone = JSON.parse(JSON.stringify(mySokobanLevels[i]));
+				levels.push(myClone);
+				}
+			return levels;
+			}
+		
+		
+		/*-----------------------------------------------------------------------------
+				
+								2. creating the divs in the document
+		
+		-------------------------------------------------------------------------------
+		*/
+		
+		//create container div
+		function containerDiv()
+			{
+			var containerDiv = document.createElement("div");
+			containerDiv.setAttribute("id", "containerDiv");
+			document.body.appendChild(containerDiv);
+			}
+			
+		//create the instructions and information div	
+		function infoDiv()
+			{
+			var infoDiv = document.createElement("div");
+			infoDiv.setAttribute("id", "infoDiv");
+			infoDiv.setAttribute("onclick", "hideMessage();");
+			document.body.appendChild(infoDiv);
+			}
+		
+		//create a div for the level buttons to go in
+		function drawLevelDiv()
+			{
+			var levelDiv = document.createElement("div");
+			levelDiv.setAttribute("id", "levelDiv");
+			document.getElementById("containerDiv").appendChild(levelDiv);
+			}
+		
+		//create a div for the undo / restart buttons
+		function drawUndoDiv()
+			{
+			var undoDiv = document.createElement("div");
+			undoDiv.setAttribute("id", "undoDiv");
+			document.getElementById("containerDiv").appendChild(undoDiv);
+			}
+		
+		//create a div for the board to go in
+		function drawBoardDiv()
+			{
+			var boardDiv = document.createElement("div");
+			boardDiv.setAttribute("id", "boardDiv");
+			document.getElementById("containerDiv").appendChild(boardDiv);
+			}
+		
+		//create a div for the movement buttons to go in
+		function drawButtonDiv()
+			{
+			var buttonDiv = document.createElement("div");
+			buttonDiv.setAttribute("id", "buttonDiv");
+			document.getElementById("containerDiv").appendChild(buttonDiv);
+			}
+		
+		//create a div for the game text
+		function drawGameText()
+			{
+			var movesText = document.createElement("div");
+			movesText.setAttribute("id", "movesText");
+			movesText.innerHTML = "Moves: " + moves + "<br/>Goals:&nbsp;0/" + currentGoals;
+			document.getElementById("containerDiv").appendChild(movesText);
+			}
+		
+		/*-----------------------------------------------------------------------------
+				
+								3. creating the display elements - board, buttons, text
+		
+		-------------------------------------------------------------------------------
+		*/
+		
+		//write the information message
+		function writeInfo()
+			{
+			document.getElementById("infoDiv").innerHTML = 
+			"<h2>Super Tiny Sokoban</h2>" +
+			"<p>Use the keyboard or the on-screen buttons to move the player <img src=images/player.png width=32 height=32>." +
+			"<br/>Push the boxes <img src=images/box.png width=32 height=32>" +
+			" on to the targets<img src=images/target.png width=32 height=32>." +
+			" You can undo your move three times each level.</p>" +
+			"<span>Click on this message box to hide it.</span>";	
+			}
+			
+		function hideMessage()
+			{
+			if (document.getElementById("infoDiv").children.length > 2)
+				{
+				var a = document.getElementById("infoDiv").children[1];
+				var b = document.getElementById("infoDiv").children[2];
+				a.parentNode.removeChild(a);
+				b.parentNode.removeChild(b);
+				document.getElementById("infoDiv").innerHTML = "<h2>Super Tiny Sokoban</h2><span>how to play</span>";
+				}
+			else
+				{
+				writeInfo();
+				}
+			}
+
+		//adding level select buttons
+		function levelButtons()
+			{
+			var levelTable = document.createElement("table");
+			levelTable.id = "levelTable";
+			
+			var rowNode = document.createElement("tr");
+				
+				for (col = 0; col < 3; col++)
+					{
+					var cell = document.createElement("td");
+					cell.id = "cell_" + col;
+					rowNode.appendChild(cell);
+					}
+				
+			levelTable.appendChild(rowNode);
+		
+			var levelDiv = document.getElementById("levelDiv");
+			levelDiv.appendChild(levelTable);
+			
+			//assign an id to each cell, create a button inside each cell and assign an onclick function to each 
+			document.getElementById("cell_0").innerHTML = "<button type='button' onclick='changeLevelsDown(n);'><</button>";
+			document.getElementById("cell_1").innerHTML = "Level: " + (n + 1);
+			document.getElementById("cell_2").innerHTML = "<button type='button' onclick='changeLevelsUp(n);'>></button>";
+			}
+		
+		//redraw level display
+		function redrawLevelNum()
+			{
+				document.getElementById("cell_1").innerHTML = "Level: " + (n + 1);
+			}
+		
+		//redraw game text after every move
+		function rewriteText()
+			{
+			document.getElementById("movesText").innerHTML = "Moves: " + moves + "<br/>" + "Goals:" + boxesOnGoals + "/" + currentGoals;
+			redrawLevelNum();
+			enableButton();
+			}
+		
+		function enableButton()
+			{
+			if (n === 0)
+				{
+				document.getElementById("cell_0").children[0].disabled=true;
+				}
+			else
+				{
+				document.getElementById("cell_0").children[0].disabled=false;
+				}
+			if ((n + 1) === levels.length)
+				{
+				document.getElementById("cell_2").children[0].disabled=true;
+				}
+			else
+				{
+				document.getElementById("cell_2").children[0].disabled=false;
+				}
+			}
+		
+		//adding undo / restart buttons
+		function undoButtons()
+			{
+			var undoTable = document.createElement("table");
+			undoTable.id = "undoTable";
+			
+			var rowNode = document.createElement("tr");
+				
+				for (col = 0; col < 3; col++)
+					{
+					var cell = document.createElement("td");
+					cell.id = "undo_cell_" + col;
+					rowNode.appendChild(cell);
+					}
+				
+			undoTable.appendChild(rowNode);
+		
+			var undoDiv = document.getElementById("undoDiv");
+			undoDiv.appendChild(undoTable);
+			
+			//assign an id to each cell, create a button inside each cell and assign an onclick function to each 
+			document.getElementById("undo_cell_0").innerHTML = "<button type='button' onclick='undoMove();'>Undo</button>";
+			document.getElementById("undo_cell_1").setAttribute("width", "119px");
+			document.getElementById("undo_cell_2").innerHTML = "<button type='button' onclick='restartLevel(n);'>Restart</button>";
+			}
+			
+		
+		//draw the table with the board
+		function drawTable()
+			{	
+			if (document.getElementById("boardTable") != null)
+					{
+					removeTable();
+					}
+					
+			var boardTable = document.createElement("table");
+			boardTable.id = "boardTable";
+			boardTable.setAttribute("cellspacing", "0px");
+			boardTable.setAttribute("cellpadding", "0px");		
+
+			for(row = 0; row < currentLevel.length ; row++)
+				{
+				var rowNode = document.createElement("tr");
+				
+				for (col = 0; col < currentLevel[row].length; col++)
+					{
+					var cell = document.createElement("td");
+					rowNode.appendChild(cell);
+					cell.innerHTML = getImage(row,col);
+					}
+					
+				boardTable.appendChild(rowNode);
+				}
+			//insert board in div
+			var boardDiv = document.getElementById("boardDiv");
+			boardDiv.appendChild(boardTable);
+			}
+		
+		//get the image for the table
+		function getImage(xLocation, yLocation)
+			{
+				var symbol = currentLevel[xLocation][yLocation];
+				var imageSource;
+				
+				switch(symbol)
+				{
+					case "#":
+						imageSource = "<img src=images/wall.png width=32 height=32>";
+						break;
+						
+					case "-":
+						imageSource = "<img src=images/floor.png width=32 height=32>";
+						break;
+						
+					case "$":
+						imageSource = "<img src=images/box.png width=32 height=32>";
+						break;
+					
+					case "@":
+						imageSource = "<img src=images/player.png width=32 height=32>";
+						break;
+					
+					case ".":
+						imageSource = "<img src=images/target.png width=32 height=32>";
+						break;
+					
+					case "*":
+						imageSource = "<img src=images/box_on_target.png width=32 height=32>";
+						break;
+					
+					
+					default:
+						imageSource = "<img src=images/wall.png width=32 height=32>";
+						break;
+				}
+			return imageSource;
+			}
+		
+		//remove the table from the document before drawing each time a move is made
+		function removeTable()
+			{
+			if (document.getElementById("boardTable") != null)
+				{
+				var myTable = document.getElementById("boardTable");
+				myTable.parentNode.removeChild(myTable);
+				}
+			   
+			}
+
+		//draws the buttons to control movement, as an alternative to keyboard input
+		function drawButtons()
+			{
+			var buttonTable = document.createElement("table");
+			buttonTable.id = "buttonTable";
+		
+			for (row = 0; row < 2; row++)
+				{
+				var rowNode = document.createElement("tr");
+				
+				for (col = 0; col < 3; col++)
+					{
+					var cell = document.createElement("td");
+					cell.id = "cell_" + row + "." + col;
+					rowNode.appendChild(cell);
+					cell.innerHTML = "&nbsp;";
+					
+					}
+				
+				buttonTable.appendChild(rowNode);
+				}
+			
+			var buttonDiv = document.getElementById("buttonDiv");
+			
+			buttonDiv.appendChild(buttonTable);
+			
+			//assign an id to each cell, create a button inside 4 of the cells and assign an onclick function to each 
+			document.getElementById("cell_0.1").innerHTML = "<button type='button' onclick='moveUp()'>&uarr;</button>";
+			document.getElementById("cell_1.0").innerHTML = "<button type='button' onclick='moveLeft()'>&larr;</button>";
+			document.getElementById("cell_1.1").innerHTML = "<button type='button' onclick='moveDown()'>&darr;</button>";
+			document.getElementById("cell_1.2").innerHTML = "<button type='button' onclick='moveRight()'>&rarr;</button>";
+			}
+		
+		/*-----------------------------------------------------------------------------
+				
+								4. the functions for gameplay
+		
+		-------------------------------------------------------------------------------
+		*/
+		
+		//change levels by selecting element of an array
+		function changeLevelsUp(levelCount)
+			{
+			//alert(n);
+			if (n + 1 < levels.length)
+				{
+				levelCount += 1;
+				n = levelCount;
+				levels = cloneLevels();
+				currentLevel = levels[n];
+				currentLevelMaster = levelMasters[n];
+				moveHistory = [];
+				drawTable();
+				countGoals();
+				moves = 0;
+				undoCount = 0;
+				countBoxesOnGoals();
+				findPlayer();
+				}
+			else
+				{
+				alert("You have passed all the levels. Congratulations!!!!");
+				n = 0;
+				restartLevel(n);
+				}
+			}
+		
+		function changeLevelsDown(levelCount)
+			{
+			if (n > 0)
+				{
+				levelCount -= 1;
+				n = levelCount;
+				levels = cloneLevels();
+				currentLevel = levels[n];
+				currentLevelMaster = levelMasters[n];
+				moveHistory = [];
+				drawTable();
+				countGoals();
+				moves = 0;
+				undoCount = 0;
+				countBoxesOnGoals();
+				findPlayer();
+				}
+			else
+				{
+				alert("This is the first level");
+				n = 0;
+				}
+			}
+			
+		function restartLevel(levelCount)
+			{
+				n = levelCount;
+				levels = cloneLevels();
+				currentLevel = levels[n];
+				currentLevelMaster = levelMasters[n];
+				moveHistory = [];
+				drawTable();
+				countGoals();
+				moves = 0;
+				undoCount = 0;
+				countBoxesOnGoals();
+				findPlayer();
+			}
+		//captures each move as an array inside moveHistory
+		function storeLevel()
+			{
+			var lastMove = JSON.parse(JSON.stringify(currentLevel));
+			moveHistory.push(lastMove);
+			}
+		
+		//undo a move up to three times
+		function undoMove()
+			{
+			if (undoCount < 3 && moves > 0)
+				{
+				var u = moveHistory[ moveHistory.length - 1 ];
+				currentLevel = JSON.parse(JSON.stringify(u));
+				moveHistory.pop();
+				moves -= 1;
+				undoCount += 1;
+				rewriteText();
+				drawTable();
+				findPlayer();
+				}
+			else if (undoCount === 3)
+				{
+					alert("Sorry, you can only undo your move 3 times.\nPress RESTART to begin the level again.")
+				}
+				
+			else if (moves <= 0)
+				{
+					alert("There are no moves to undo!")
+				}
+			
+			}
+		
+		
+		//gets the location of the player in the board array
+		function findPlayer()
+			{
+			for (y = 0; y < currentLevel.length; y++)
+				{
+				if ( currentLevel[y].indexOf("@") > -1 )
+					{
+						var x = currentLevel[y].indexOf("@");
+						playerLocation = [y, x];
+					}
+				}
+
+			}
+		
+		//count the amount of goals for the current level
+		function countGoals()
+			{
+			var goalCounter = 0;
+			for (i = 0; i < currentLevelMaster.length; i++)
+				{
+				for (j = 0; j < currentLevelMaster[i].length; j++)
+					{
+					if (currentLevelMaster[i][j] === ".")
+					goalCounter += 1;
+					
+					}
+				}
+			currentGoals = goalCounter;	
+			}
+		
+		//count boxes on goals
+		function countBoxesOnGoals()
+			{
+			var boxCounter = 0;
+			for (i = 0; i < currentLevel.length; i++)
+				{
+				for (j = 0; j < currentLevel[i].length; j++)
+					{
+					if (currentLevel[i][j] === "*")
+					boxCounter += 1;
+					}
+				}
+			boxesOnGoals = boxCounter;
+			rewriteText()
+			checkWinner();	
+			}
+			
+		//getting keyboard input
+		document.addEventListener('keydown', function()
+			{
+			//up key
+			if (event.keyCode == 38)
+				{
+				moveUp();
+				}
+			//left key
+			else if (event.keyCode == 37)
+				{
+				moveLeft();
+				}
+			//down key	
+			else if (event.keyCode == 40)
+				{
+				moveDown();
+				}
+				
+			//right key	
+			else if (event.keyCode == 39)
+				{
+				moveRight();
+				}
+			}, true);
+			
+		
+		//check for winner
+		function checkWinner()
+			{	
+			if (currentGoals === boxesOnGoals)
+				{
+					alert("Congratulations, you solved the puzzle in " + moves + " moves!!!");
+					changeLevelsUp(n);
+				}
+			}
+		
+		/*------------------------------------------------------------------------------
+										the move functions
+		
+		
+						there are four types of move that can be called from
+						the checkMove function, and within the moves that handle boxes
+						there are different outcomes depending on what is behind the
+						box
+						
+						in the move functions, the x and y arguments are the players location 
+						while the w and z are the coordinates of the move
+		---------------------------------------------------------------------------------
+		*/
+		
+		//										stage 1
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		//handles the key or button press event and calls the checkMove function with the appropriate arguments
+		//the function first checks if the move is possible using the co-ordinates of the move as parameters
+		function moveUp()
+			{
+				checkMove(-1,0);
+			}
+		
+		function moveDown()
+			{
+				checkMove(1,0);
+			}
+		
+		function moveLeft()
+			{
+				checkMove(0,-1);
+			}
+			
+		function moveRight()
+			{
+				checkMove(0,1);
+			}
+			
+		//										stage 2
+		/////////////////////////////////////////////////////////////////////////////////////
+		//before making the move, check the type of move to be made and store the current board for the undo function
+		//what is in the space the player is going to and what is in the space after that
+		function checkMove(w,z)
+			{
+			var x = playerLocation[1]; //the players x location
+			var y = playerLocation[0]; //the players y location
+			
+			var nextSpace = currentLevel[y + w][x + z];
+			
+			//if the next space is a wall, don't move.
+			if (nextSpace === "#")
+				{
+				
+				}
+			
+			//if the next space is a box, and the space after is not a goal, move the box
+			else if (nextSpace === "$" && currentLevel[y + w + w][x + z + z] !== ".")
+				{
+				moveBox(w,z,x,y);
+				}
+			
+			//if the next space is a box and the space after is a goal, move the box over the goal
+			else if (nextSpace === "$" && currentLevel[y + w + w][x + z + z] === ".")
+				{
+				placeBox(w,z,x,y);
+				}
+			
+			//if the next space is a box on a goal, handle the move differently (special move)
+			else if (nextSpace === "*")
+				{
+				moveSpecial(w,z,x,y);
+				}
+			
+			//if none of the above are true, make a normal move
+			else
+				{
+				makeMove(w,z,x,y);
+				}
+			
+			}
+		
+		//										stage 3
+		/////////////////////////////////////////////////////////////////////////////////////////
+		//the actual movement is handled by changing the arrays that the level data is stored in
+		//each function takes arguments w and z as move co-ordinates and x and y as player location co-ordinates
+		//this is the generic move of player over floor
+		function makeMove(w,z,x,y)
+			{
+			storeLevel();
+			currentLevel[y][x] = currentLevelMaster[y][x];
+			currentLevel[y + w][x + z] = "@";
+			drawTable();
+			moves += 1;
+			rewriteText();
+			findPlayer();
+			}
+	
+		//box moving function
+		function moveBox(w,z,x,y)
+			{
+			var nextSpace = currentLevel[y + w][x + z];
+			var spaceAfter = currentLevel[y + w + w][x + z + z];
+			//if the space behind the box is not a wall and is not another box and is not a box on goal, move as the box to that space
+			if (currentLevel[y + w + w][x + z + z] !== "#" && currentLevel[y + w + w][x + z + z] !== "$" && currentLevel[y + w + w][x + z + z] !== "*")
+				{
+				storeLevel();
+				currentLevel[y][x] = currentLevelMaster[y][x];
+				currentLevel[y + w][x + z] = "@";
+				currentLevel[y + w + w][x + z + z] = "$";
+				drawTable();
+				moves += 1;
+				countBoxesOnGoals();
+				rewriteText();
+				findPlayer();
+				}
+			}
+			
+		//place box on goal function
+		function placeBox(w,z,x,y)
+			{
+			//if the space behind the box is not a wall and is not another box, move the box on to the goal
+			if (currentLevel[y + w + w][x + z + z] !== "#" && currentLevel[y + w + w][x + z + z] !== "$")
+				{
+				storeLevel();
+				currentLevel[y][x] = currentLevelMaster[y][x];
+				currentLevel[y + w][x + z] = "@";
+				currentLevel[y + w + w][x + z + z] = "*";
+				drawTable();
+				moves += 1;
+				rewriteText();
+				countBoxesOnGoals();
+				findPlayer();
+				}
+			}
+				
+			
+		//move over box on goal
+		function moveSpecial(w,z,x,y)
+			{
+			//if the space behind the box-on-goal is not a wall and is not another box and is not another box-on-goal and is not a normal empty space, move the box-on-goal to the next space
+			if (currentLevel[y + w + w][x + z + z] !== "#" && currentLevel[y + w + w][x + z + z] !== "$" && currentLevel[y + w + w][x + z + z] !== "*" && currentLevel[y + w + w][x + z + z] !== "-" )
+				{
+				storeLevel();
+				currentLevel[y][x] = currentLevelMaster[y][x];
+				currentLevel[y + w][x + z] = "@";
+				currentLevel[y + w + w][x + z + z] = "*";
+				moves +=1;
+				}
+				
+			else if (currentLevel[y + w + w][x + z + z] === "-")
+				{
+				storeLevel();
+				currentLevel[y][x] = currentLevelMaster[y][x];
+				currentLevel[y + w][x + z] = "@";
+				currentLevel[y + w + w][x + z + z] = "$";
+				moves +=1;
+				}
+			countBoxesOnGoals();
+			drawTable();
+			rewriteText();
+			findPlayer();
+			}
+		
+		/*------------------------------------------------------------------------------
+											
+											setup document
+		
+		--------------------------------------------------------------------------------
+		*/
+	
+		//execute these functions when all DOM elements are loaded
+		function setup()
+			{
+			infoDiv();
+			writeInfo();
+			containerDiv();
+			createLevelArrays();
+			cloneLevels();
+			drawLevelDiv();
+			levelButtons();
+			drawGameText();
+			drawUndoDiv();
+			undoButtons();
+			drawBoardDiv();
+			drawButtonDiv();
+			drawButtons();
+			currentLevel = levels[n];
+			currentLevelMaster = levelMasters[n];
+			drawTable();
+			findPlayer();
+			countGoals();
+			countBoxesOnGoals();
+			}
+		
+		/*------------------------------------------------------------------------------
+							
+								5. global variables for the game
+		
+		--------------------------------------------------------------------------------
+		*/
+		
+		var n = 0; //this is the number that selects the level from the levels array
+		var playerLocation = [null,null];
+		var levels = [];
+		var levelMasters = [];
+		var currentLevel; 
+		var currentLevelMaster;
+		var moves = 0;
+		var undoCount = 0;
+		var moveHistory = [];
+		var currentGoals = 0;
+		var boxesOnGoals = 0;
+		
+		document.addEventListener("DOMContentLoaded", function(){setup();});
+		</script>
+	</head>
+	
+	<body>
+	</body>
+
+
+
+
+</html>

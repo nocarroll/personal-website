@@ -19,19 +19,12 @@ hr {
 
 .image {
   img {
-    &.is-centered {
-      margin: auto;
-    }
     &.is-rounded {
       border-radius: 50%;
     }
-    &.has-border {
-      border: 5px solid $white;
-    }
-    &.has-shadow {
-      box-shadow: 0 3px 6px rgba(255, 105, 98, 0.16), 
-                  0 3px 6px rgba(255, 105, 98, 0.23);
-    }
+  }
+  &.is-centered {
+    margin: auto;
   }
 }
 
@@ -42,7 +35,7 @@ hr {
   .media-block {
     margin-bottom: 1em;
     ul {
-      list-style: initial;
+      list-style: inside;
     }
   }
   a {

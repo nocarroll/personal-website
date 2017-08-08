@@ -30,7 +30,7 @@
         <article class="media">
           <section class="media-left">
             <figure class="image is-96x96">
-              <img class="is-rounded is-centered" src="./assets/img/profile.png">
+              <img class="is-rounded" src="./assets/img/profile.png">
             </figure>
           </section>
           <div class="media-content">
@@ -45,8 +45,24 @@
             innovative product solutions to customers in complex healthcare settings
           </i>
         </p>
+        <div class="tabs is-small">
+          <ul>
+            <li>
+              <a href="#work">💻 Work</a>
+            </li>
+            <li>
+              <a href="#skills">⚡ Skills</a>
+            </li>
+            <li>
+              <a href="#education">🎓 Education</a>
+            </li>
+            <li>
+              <a href="#about">🥑 About</a>
+            </li>
+          </ul>
+        </div>
         <!-- Work  -->
-        <article class="media">
+        <article class="media" id="work">
           <section class="media-left">
             <h1 class="title is-1">
               💻
@@ -75,13 +91,13 @@
             </p>
             <p class="content">
               In March 2017, the LaminOS.ED project was 
-              <a href="https://www.irishtimes.com/life-and-style/health-family/how-technology-could-save-your-life-in-an-irish-a-e-1.2982016">profiled by the Irish Times newspaper</a> and recieved the cover feature of the health supplement.
+              <a href="https://www.irishtimes.com/life-and-style/health-family/how-technology-could-save-your-life-in-an-irish-a-e-1.2982016">profiled by the Irish Times newspaper</a> and recieved the cover feature of the midweek health supplement of the print edition.
             </p>
           </div>
         </article> <!-- End Work  -->
 
         <!-- Skills  -->
-        <article class="media">
+        <article class="media" id="skills">
           <section class="media-left">
             <h1 class="title is-1">
               ⚡
@@ -198,7 +214,7 @@
                   <p class="content">
                     <ul class="has-text-grey">
                       <li>Requirements Gathering</li>
-                      <li>Technical & Non-Technical Communication</li>
+                      <li><strong class="has-text-grey-dark">Communication</strong> <small>(Technical & Non-Technical)</small> </li>
                     </ul>
                   </p>
                 </div>
@@ -211,12 +227,12 @@
                 </div>
               </div>
             </section>
-            <small class="has-text-grey is-pulled-right">* <strong class="has-text-grey-dark">bold</strong> = favourite tools 🎉</small>
+            <small class="has-text-grey is-pulled-right">* <strong class="has-text-grey-dark">bold</strong> = personal favourites 🎉</small>
           </div>
         </article>  <!-- End Skills  -->
 
         <!-- Education  -->
-        <article class="media">
+        <article class="media" id="education">
           <section class="media-left">
             <h1 class="title is-1">
               🎓
@@ -242,21 +258,69 @@
           </div>
         </article> <!-- End Education  -->
 
-        <!-- Misc.  -->
-        <article class="media">
+        <!-- About  -->
+        <article class="media" id="about">
           <section class="media-left">
             <h1 class="title is-1">
               🥑
             </h1>
           </section>
           <div class="media-content">
-            <h3 class="title">Misc.</h3>
-            
+            <h3 class="title">About</h3>
+            <section class="media-block">
+              <p class="content has-text-grey">
+                This website presents work-related information about the author, 
+                <a href="https://www.linkedin.com/in/neilocarroll/">Neil O'Carroll</a>, as an informal CV for potential future employers,
+                collaborators or business contacts. As I am a <strong class="has-text-grey-dark">Human™</strong>, there is more to me than just my academic credentials and emplyment history. 
+                Below are some quick notes on my hobbies, interests and background.
+              </p>
+            </section>
+            <section class="media-block">
+              <h5 class="title is-5 has-text-primary is-marginless">Bio</h5>
+              <p>I grew up in Tralee, in the South West of Ireland, but I currently live and work in Dublin. I'm interested in technology, web, music, human languages and design. Before coming into the dev world, I worked as an 
+                English language teacher while also doing audio and music recording projects on the side.
+              </p>
+            </section>
+            <section class="media-block">
+              <h5 class="title is-5 has-text-primary is-marginless">Music</h5>
+              <p>Much of my free time is spent writing, recording and performing music, sometimes on the guitar and sometimes using a computer.</p>
+              <p>I first became interested in development through dabbling in sound design for film and video games, and I try to find a few hours every week to 
+                make some fresh bleeps and bloops with <a href="https://www.ableton.com/en/">Ableton Live</a> or, more recently, the <a href="http://sonic-pi.net/">Sonic Pi</a> - 
+                a really cool FOSS project for live coding music in Ruby.</p>
+            </section>
+            <section class="media-block">
+              <h5 class="title is-5 has-text-primary is-marginless">Sports</h5>
+              <p>To keep <small><small>(somewhat)</small></small> fit, I train at a kickboxing gym a few nights a week, and occassionally play 5-a-side football at the weekends.</p>
+            </section>
+            <section class="media-block">
+              <h5 class="title is-5 has-text-primary is-marginless">Emoji</h5>
+              <p>I used a lot of Emoji(s) on this site ¯\_(ツ)_/¯ </p>
+              <p>Don't @ me.</p>
+            </section>
+            <section class="media-block">
+              <h5 class="title is-5 has-text-primary is-marginless">Misc.</h5>
+              <p>If you've read this far, your reward is <a href="./assets/sokoban/superTinySokoban.html">the first JavaScript web app I wrote</a> as a web underling, in all its raw HTML/CSS/JS glory.</p>
+            </section>
           </div>
-        </article> <!-- End Misc.  -->
+        </article> <!-- End About  -->
       </div>
     </div>
   </main>
+  <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        This site was designed and written by <a href="http://neilocarroll.com">Neil O'Carroll</a> using the 
+        <a href="http://bulma.io">Bulma</a> CSS framework.
+      </p>
+      <p>
+        <figure class="image is-centered is-32x32">
+          <img class="is-rounded" src="./assets/img/icon.png">
+        </figure>
+      </p>
+    </div>
+  </div>
+</footer>
 </body>
 
 </html>

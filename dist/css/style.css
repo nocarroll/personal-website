@@ -5238,17 +5238,11 @@ hr.is-primary {
   height: 2px;
   background: #FF6962; }
 
-.image img.is-centered {
-  margin: auto; }
-
 .image img.is-rounded {
   border-radius: 50%; }
 
-.image img.has-border {
-  border: 5px solid white; }
-
-.image img.has-shadow {
-  box-shadow: 0 3px 6px rgba(255, 105, 98, 0.16), 0 3px 6px rgba(255, 105, 98, 0.23); }
+.image.is-centered {
+  margin: auto; }
 
 .media-content .tag {
   margin-bottom: 0.4em; }
@@ -5256,7 +5250,7 @@ hr.is-primary {
 .media-content .media-block {
   margin-bottom: 1em; }
   .media-content .media-block ul {
-    list-style: initial; }
+    list-style: inside; }
 
 .media-content a {
   color: #3273dc; }
