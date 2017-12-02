@@ -12,5 +12,5 @@ _In the near future (2018) I hope to add:_
 - CI
 - 100% lighthouse/PWA complience
 
-[See the live site](https://www.neilocarroll.com "Go to neilocarroll.com")
+[See the live site](http://www.neilocarroll.com "Go to neilocarroll.com")
 
