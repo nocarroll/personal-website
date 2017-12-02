@@ -6177,3 +6177,6 @@ hr.is-primary {
     color: #7a7a7a; }
   .media-content a:hover {
     color: #4a4a4a; }
+
+.footer {
+  padding-bottom: 3rem; }
