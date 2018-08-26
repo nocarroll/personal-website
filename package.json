@@ -1,21 +1,25 @@
 {
   "name": "portfolio-site-2017",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Portfolio Website of Neil O'Carroll",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp build",
+    "release": "gulp build"
+  },
   "author": "Neil O'Carroll <neilocarroll91@gmail.com> (neilocarroll.com)",
   "license": "MIT",
   "dependencies": {
     "bulma": "^0.5.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.18.13",
+    "browser-sync": "^2.24.6",
     "cpy": "^5.1.0",
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0",
-    "node-sass": "^4.5.3",
-    "onchange": "^3.2.1",
+    "gulp-sass": "^3.2.1",
+    "node-sass": "^4.9.3",
+    "onchange": "^3.3.0",
     "parallelshell": "^3.0.1"
   }
 }
