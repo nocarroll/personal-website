@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "gulp",
-    "build": "gulp build",
-    "release": "gulp build"
+    "release": "gulp release"
   },
   "author": "Neil O'Carroll <neilocarroll91@gmail.com> (neilocarroll.com)",
   "license": "MIT",

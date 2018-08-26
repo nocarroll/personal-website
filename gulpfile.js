@@ -36,4 +36,4 @@ gulp.task('copy:assets', function () {
 });
 
 gulp.task('default', ['serve']);
-gulp.task('build', ['sass', 'copy:html', 'copy:assets']);
+gulp.task('release', ['sass', 'copy:html', 'copy:assets']);
