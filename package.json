@@ -1,5 +1,6 @@
 {
-  "name": "portfolio-site-2017",
+  "name": "neilocarroll.com",
+  "repository": "https://github.com/nocarroll/personal-website",
   "version": "1.0.1",
   "description": "Portfolio Website of Neil O'Carroll",
   "main": "index.js",
