@@ -1,9 +1,13 @@
 {
   "name": "portfolio-site-2017",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Portfolio Website of Neil O'Carroll",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp build",
+    "release": "gulp build"
+  },
   "author": "Neil O'Carroll <neilocarroll91@gmail.com> (neilocarroll.com)",
   "license": "MIT",
   "dependencies": {

@@ -6,7 +6,7 @@ _Here you can find:_
 - social links
 - odds and ends
 
-_In the near future (2018) I hope to add:_
+_In the near future I hope to add:_
 - portfolio
 - blog
 - CI
